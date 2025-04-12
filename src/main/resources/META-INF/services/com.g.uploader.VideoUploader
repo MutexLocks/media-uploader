@@ -1,0 +1,8 @@
+com.g.media.uploader.component.video.BilibiliVideoUploader
+com.g.media.uploader.component.video.WechatVideoUploader
+com.g.media.uploader.component.video.DouYinVideoUploader
+com.g.media.uploader.component.video.HaoKanVideoUploader
+com.g.media.uploader.component.video.KuaiShouVideoUploader
+com.g.media.uploader.component.video.WeiShiVideoUploader
+com.g.media.uploader.component.video.XiaoHongShuVideoUploader
+com.g.media.uploader.component.video.XiGuaVideoUploader
