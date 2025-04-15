@@ -57,7 +57,7 @@ public class XiaoHongShuVideoUploader extends AbstractVideoUploader {
     @Override
     public void uploadFile(String videoPath, WebDriver driver) {
         getWait(driver).until(ExpectedConditions
-                        .presenceOfElementLocated(By.xpath("//input[@class=\"file\"]")))
+                        .presenceOfElementLocated(By.xpath("//input[@type=\"file\"]")))
                 .sendKeys(videoPath);
         Long count = FileUtils.getUploadFileSleepTime(videoPath);
         SleepUtils.sleepSecond(count.intValue());
