@@ -22,7 +22,7 @@ public enum PlatformEnum {
     Wechat("Wechat", "微信视频号"),
     WeiShi("WeiShi", "腾讯微视"),
     XiGua("XiGua", "西瓜短视频"),
-    HaoKan("HaoKan", "百度好看视频");
+    BAI_JIA_VIDEO("BAI_JIA_VIDEO", "百家号视频");
 
 
     private final String code;
