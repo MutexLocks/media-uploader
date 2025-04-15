@@ -19,49 +19,6 @@ public abstract class AbstractVideoUploader implements VideoUploader {
         return url();
     }
 
-//    @Override
-//    public void uploadFile(String videoPath) {
-//        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(By
-//                .xpath(uploadVideoXpath())));
-//        button.click();
-//        try {
-//            TimeUnit.SECONDS.sleep(5);
-//            BrowserHelper.paste(videoPath, driver);
-//            TimeUnit.SECONDS.sleep(getUploadFileSleepTime(videoPath));
-//        } catch (InterruptedException ex) {
-//            throw new UploaderException(ex);
-//        }
-//    }
-
-//    @Override
-//    public void closTabs() {
-//        try {
-//            Set<String> windowHandles = driver.getWindowHandles();
-//            for (String handle : windowHandles) {
-//                driver.switchTo().window(handle);
-//                driver.close();
-//            }
-//        } catch (Exception ex) {
-//            log.error("关闭页面失败", ex);
-//        }
-//    }
-
-
-//    public void waitPage() {
-//        int count = 1;
-//        JavascriptExecutor js = (JavascriptExecutor) driver;
-//        while (!js.executeScript("return document.readyState").equals("complete")) {
-//            // 等待页面加载完成
-//            log.info("等待页面加载完成...");
-//            SleepUtils.sleepSecond(10);  // 也可以使用更好的等待机制
-//            if (count > 100) {
-//                break;
-//            }
-//            log.info("已等待时间：{}秒", 10 * count);
-//            count--;
-//        }
-//    }
-
     public WebDriverWait getWait(WebDriver driver) {
         return new WebDriverWait(driver, 20);
     }
