@@ -28,10 +28,6 @@ public class BilibiliVideoUploader extends AbstractVideoUploader {
 
     @Override
     public String logoBase64() {
-        log.info("classloader: " + this.getClass().getClassLoader());
-        log.info("resource: " + this.getClass().getResource("logo/Bilibili.png"));
-        log.info("asStream: " + this.getClass().getResourceAsStream("logo/Bilibili.png"));
-
         return FileUtils.image2Base64("logo/Bilibili.png", this.getClass());
     }
 
