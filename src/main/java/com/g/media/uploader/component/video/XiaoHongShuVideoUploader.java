@@ -105,9 +105,9 @@ public class XiaoHongShuVideoUploader extends AbstractVideoUploader {
     @Override
     public void submit(WebDriver driver) {
         WebElement button = getWait(driver).until(ExpectedConditions.elementToBeClickable(By
-                .xpath("//span[contains(text(), '发布')]")));
+                .xpath("//*[@id=\"publish-container\"]/div[2]/div[2]/div/button[1]/div/span")));
         button.click();
-        checkClickResult("//span[contains(text(), '发布')]", driver);
+        checkClickResult("//*[@id=\"publish-container\"]/div[2]/div[2]/div/button[1]/div/span", driver);
     }
 
 //    private Boolean alert() {
