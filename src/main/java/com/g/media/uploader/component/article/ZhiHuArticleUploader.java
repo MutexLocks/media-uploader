@@ -42,11 +42,6 @@ public class ZhiHuArticleUploader extends AbstractArticleUploader {
 
     @Override
     public String logoBase64() {
-        System.out.println("== SPI Provider Resource Check ==");
-        System.out.println("classloader: " + this.getClass().getClassLoader());
-        System.out.println("resource: " + this.getClass().getResource("/logo/Bilibili.png"));
-        System.out.println("asStream: " + this.getClass().getClassLoader().getResourceAsStream("logo/Bilibili.png"));
-
         return FileUtils.image2Base64("logo/ZHI_HU.png", this.getClass());
     }
 
