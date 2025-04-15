@@ -69,16 +69,16 @@ public class XiaoHongShuVideoUploader extends AbstractVideoUploader {
                 .elementToBeClickable(By.xpath("//div[contains(text(), '设置封面')]")));
         cover.click();
 
-//        cover = getWait(driver).until(ExpectedConditions
-//                .elementToBeClickable(By.xpath("//h6[contains(text(), '上传封面')]")));
-//        cover.click();
+        cover = getWait(driver).until(ExpectedConditions
+                .elementToBeClickable(By.xpath("/html/body/div[12]/div/div[2]/div/div[1]/div/div/div[2]/div/div[1]/h6")));
+        cover.click();
 
         getWait(driver).until(ExpectedConditions
-                        .presenceOfElementLocated(By.xpath("//input[@type=\"file\"]")))
+                        .presenceOfElementLocated(By.xpath("/html/body/div[12]/div/div[2]/div/div[2]/div[2]/input")))
                 .sendKeys(imagePath);
         SleepUtils.sleepSecond(2);
         WebElement submitButton = getWait(driver).until(ExpectedConditions
-                .elementToBeClickable(By.xpath("//button[@type=\"button\"]")));
+                .elementToBeClickable(By.xpath("/html/body/div[12]/div/div[3]/div/button[2]/div/span")));
         submitButton.click();
         SleepUtils.sleepSecond(10);
     }
