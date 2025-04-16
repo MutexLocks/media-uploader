@@ -27,7 +27,7 @@ public class BaiJiaVideoUploader extends AbstractVideoUploader {
 
     @Override
     public AccountInfo collectAccountInfo(WebDriver driver) {
-        if (!driver.getCurrentUrl().contains("accountSet")) {
+        if (!driver.getCurrentUrl().contains("accountSet") && !driver.getCurrentUrl().contains("login")) {
             driver.get(homeUrl());
             SleepUtils.sleepSecond(5);
         }
