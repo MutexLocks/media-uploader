@@ -2,6 +2,7 @@ package com.g.media.uploader.component.video;
 
 import com.g.media.uploader.model.PlatformEnum;
 import com.g.media.uploader.utils.DownloadHelper;
+import com.g.media.uploader.utils.SleepUtils;
 import com.g.uploader.model.AccountInfo;
 
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,7 @@ public class KuaiShouVideoUploader extends AbstractVideoUploader {
         AccountInfo accountInfo = new AccountInfo();
         accountInfo.setName(userName);
         accountInfo.setAvatar(imgBase64);
-        
+
         return accountInfo;
     }
 
@@ -63,30 +64,36 @@ public class KuaiShouVideoUploader extends AbstractVideoUploader {
 
     @Override
     public void setVideoTitle(String title, WebDriver driver) {
-        
+        // no title setting
     }
 
     @Override
     public void setVideoCover(String imagePath, WebDriver driver) {
-        
+        WebElement cover = getWait(driver).until(ExpectedConditions
+                .presenceOfElementLocated(By.xpath("//div[contains(text(), '封面设置')]")));
+        cover.click();
+
+        cover = getWait(driver).until(ExpectedConditions
+                .presenceOfElementLocated(By.xpath("//div[contains(text(), '上传封面')]")));
+        cover.click();
+        SleepUtils.sleepSecond(1);
+
+        driver.findElements(By.xpath("//input[@type='file']"))
+                .get(1)
+                .sendKeys(imagePath);
+        SleepUtils.sleepSecond(2);
+        WebElement submitButton = getWait(driver).until(ExpectedConditions
+                .presenceOfElementLocated(By.xpath("//span[contains(text(), '确认')]")));
+        submitButton.click();
+        SleepUtils.sleepSecond(5);
     }
 
     @Override
     public void setVideoDescription(String description, WebDriver driver) {
-        
+        WebElement input = getWait(driver).until(ExpectedConditions.elementToBeClickable(By
+                .xpath("//div[@id='work-description-edit']")));
+        input.sendKeys(description);
     }
-
-//    @Override
-//    public Boolean needAuth() {
-//        try {
-//            wait.until(ExpectedConditions.elementToBeClickable(By
-//                    .xpath(uploadVideoXpath())));
-//        } catch (Exception ex) {
-//            log.info("can not find upload button, need auth");
-//            return true;
-//        }
-//        return false;
-//    }
 
 
     @Override
@@ -102,18 +109,12 @@ public class KuaiShouVideoUploader extends AbstractVideoUploader {
 
     }
 
-    @Override
-    public void setVideoContentTopic(String videoContentTopic, WebDriver driver) {
-        WebElement input = getWait(driver).until(ExpectedConditions
-                .elementToBeClickable(By.xpath("//div[@placeholder=\"添加合适的话题和描述，作品能获得更多推荐～\"]")));
-        input.sendKeys(videoContentTopic);
-    }
 
     @Override
     public void submit(WebDriver driver) {
         WebElement button = getWait(driver).until(ExpectedConditions
-                .elementToBeClickable(By
-                        .xpath("//button/span[text()=\"发布\"]")));
+                .presenceOfElementLocated(By
+                        .xpath("//div[contains(text(), '发布')]")));
         button.click();
     }
 }
