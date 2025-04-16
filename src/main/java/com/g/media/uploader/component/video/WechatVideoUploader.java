@@ -71,12 +71,26 @@ public class WechatVideoUploader extends AbstractVideoUploader {
         title = title
                 .replaceAll("，", " ")
                 .replaceAll(",", " ");
+        //视频号标题至少要6个字
+        title = addBlank(title);
         input.sendKeys(title);
         try {
             TimeUnit.SECONDS.sleep(3);
         } catch (InterruptedException ex) {
             throw new UploaderException(ex);
         }
+    }
+
+    private String addBlank(String title) {
+        if (title.length() >= 6) {
+            return title;
+        }
+        int blankCount = 6 - title.length();
+        StringBuilder titleBuilder = new StringBuilder(title);
+        for (int i = 0; i < blankCount; i++) {
+            titleBuilder.append(" ");
+        }
+        return titleBuilder.toString();
     }
 
     @Override
