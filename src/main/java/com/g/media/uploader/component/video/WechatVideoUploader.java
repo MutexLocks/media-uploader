@@ -142,12 +142,6 @@ public class WechatVideoUploader extends AbstractVideoUploader {
         checkClickResult("//*[@id=\"container-wrap\"]/div[2]/div/div/div[1]/div[3]/div/div[2]/div[2]/div[9]/div[5]/span/div/button", driver);
     }
 
-    String qrCodeImagePath = "C:\\Users\\G\\Desktop\\doc\\right_half.png"; // 请替换为您的二维码图片路径
-
-    public static void main(String[] args) throws Exception {
-
-    }
-
 }
 
 
