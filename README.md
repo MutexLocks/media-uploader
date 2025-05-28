@@ -1,5 +1,5 @@
 # Media Uploader
-<img src="docs/images/logo.png" style="width:50%;" />
+<img src="docs/images/logo.png" style="width:50%;"  alt="logo"/>
 
 Media Uploader 是 [UTMatrix](https://www.utmatrix.top) 的媒体上传组件。
 用于一键上传视频/文章到多个平台
@@ -38,13 +38,13 @@ Media Uploader 是 [UTMatrix](https://www.utmatrix.top) 的媒体上传组件。
 
 本组件为 UTMatrix 的官方上传组件，提供完整的媒体文件上传功能支持。
 
-![Architecture](docs/images/uploader-architecture.png)
+![Architecture](docs/images/meida-uploader.svg)
 
 ## 功能实现
 
-- 视频上传/文档上传到不同平台
+- 平台LOGO设置
 - 识别用户名和头像
-- LOGO设置
+- 视频上传/文档上传到不同平台
 
 ## 环境要求
 - Java 8
@@ -59,7 +59,7 @@ Media Uploader 是 [UTMatrix](https://www.utmatrix.top) 的媒体上传组件。
 将新增平台的logo放入`src/main/resources/logo`下（在步骤2的接口实现中会引入）
 
 #### 2）实现接口
-创建新的上传器类并实现 `VideoUploader` 接口，可参考[BilibiliVideoUploader.java](src%2Fmain%2Fjava%2Fcom%2Fg%2Fmedia%2Fuploader%2Fcomponent%2Fvideo%2FBilibiliVideoUploader.java)：
+创建新的上传器类并实现 [VideoUploader](https://gitee.com/when-bean/uploader/blob/master/src/main/java/com/g/uploader/VideoUploader.java) 接口，可参考[BilibiliVideoUploader.java](src%2Fmain%2Fjava%2Fcom%2Fg%2Fmedia%2Fuploader%2Fcomponent%2Fvideo%2FBilibiliVideoUploader.java)：
 
 #### 3）注册SPI服务
 
@@ -78,7 +78,7 @@ com.g.media.uploader.component.video.XiaoHongShuVideoUploader
 将新增平台的logo放入`src/main/resources/logo`下（在步骤2的接口实现中会引入）
 
 #### 2）实现接口
-创建新的上传器类并实现 `ArticleUploader` 接口，可参考[DaYuArticleUploader.java](src%2Fmain%2Fjava%2Fcom%2Fg%2Fmedia%2Fuploader%2Fcomponent%2Farticle%2FDaYuArticleUploader.java)：
+创建新的上传器类并实现 [ArticleUploader](https://gitee.com/when-bean/uploader/blob/master/src/main/java/com/g/uploader/ArticleUploader.java) 接口，可参考[DaYuArticleUploader.java](src%2Fmain%2Fjava%2Fcom%2Fg%2Fmedia%2Fuploader%2Fcomponent%2Farticle%2FDaYuArticleUploader.java)：
 
 #### 3）注册SPI服务
 
@@ -114,11 +114,12 @@ com.g.media.uploader.component.article.DaYuArticleUploader
 
 ## 常见问题
 
-### Q: 支持哪些文件格式？
-A: 目前支持主流的视频和图片格式，包括 MP4、AVI、JPG、PNG 等。
+### Q: 如何扩展页面的参数？
+A: 上传媒体文件时，有个选项 **其他设置** ，对应接口中的extraConfig方法，可自行解析处理该参数
 
-### Q: 如何处理上传失败？
-A: 系统会自动进行重试，您也可以通过配置自定义重试策略。
+### Q: 如何调式代码？
+A: 请参考[调试](#调试)章节
+
 
 ## 联系方式
 - 官网地址：https://www.utmatrix.top
