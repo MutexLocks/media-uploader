@@ -2,9 +2,13 @@
 <img src="docs/images/logo.png" style="width:50%;"  alt="logo"/>
 
 Media Uploader 是 [UTMatrix](https://www.utmatrix.top) 的媒体上传组件。
-用于一键上传视频/文章到多个平台
-该组件需要配合 [UTMatrix](https://www.utmatrix.top) 系统使用。
-
+用于一键上传视频/文章到多个平台<br>
+该组件可配合 [UTMatrix](https://www.utmatrix.top) 系统使用。
+<br>
+UTMatrix官网地址：[https://www.utmatrix.top](https://www.utmatrix.top)
+<br>
+UTMatrix系统在线DEMO访问地址：[https://utmatrix.vercel.app](https://utmatrix.vercel.app)
+<br>
 [![Version](https://img.shields.io/badge/version-v1.0.0-blue)]()
 [![License](https://img.shields.io/badge/license-MIT-green)]()
 [![Language](https://img.shields.io/badge/language-Java-orange)]()
@@ -16,6 +20,9 @@ Media Uploader 是 [UTMatrix](https://www.utmatrix.top) 的媒体上传组件。
 ## 目录
 
 - [组件说明](#组件说明)
+  - [系统架构](#系统架构)
+  - [添加账号流程](#添加账号流程)
+  - [上传视频流程](#上传视频流程)
 - [功能实现](#功能实现)
 - [环境要求](#环境要求)
 - [新增上传器](#新增上传器)
@@ -35,11 +42,15 @@ Media Uploader 是 [UTMatrix](https://www.utmatrix.top) 的媒体上传组件。
 - [致谢](#致谢)
 
 ## 组件说明
-
+### 系统架构
 本组件为 UTMatrix 的官方上传组件，提供完整的媒体文件上传功能支持。
 
 ![Architecture](docs/images/meida-uploader.svg)
 
+### 1、添加账号流程
+![Account](docs/images/login.svg)
+### 2、上传视频流程
+![publish](docs/images/publish.svg)
 ## 功能实现
 
 - 平台LOGO设置
