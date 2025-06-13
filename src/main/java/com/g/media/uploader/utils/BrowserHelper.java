@@ -1,8 +1,8 @@
 package com.g.media.uploader.utils;
 
 import cn.hutool.core.swing.clipboard.ImageSelection;
-import lombok.extern.slf4j.Slf4j;
 import com.g.media.uploader.exception.UploaderException;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -81,7 +81,7 @@ public class BrowserHelper {
     public static void scrollToClick(WebElement webElement, WebDriver webDriver) {
         JavascriptExecutor js = (JavascriptExecutor) webDriver;
         js.executeScript("arguments[0].scrollIntoView();",webElement);
-        SleepUtils.sleepSecond(2);
+        SleepUtils.sleepSecond(3);
         webElement.click();
     }
 

@@ -9,7 +9,6 @@ import com.g.uploader.model.AccountInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -70,16 +69,16 @@ public class DouYinVideoUploader extends AbstractVideoUploader {
                 .sendKeys(videoPath);
         Long count = FileUtils.getUploadFileSleepTime(videoPath);
         SleepUtils.sleepSecond(count.intValue());
-        log.info("出现烦人弹窗，打开新窗口，重新上传");
-
-        JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
-        String jsOpenNewWindow = "window.open('" + url() + "');";
-        jsExecutor.executeScript(jsOpenNewWindow);
-
-        wait.until(ExpectedConditions
-                        .presenceOfElementLocated(By.xpath("//input[@type=\"file\"]")))
-                .sendKeys(videoPath);
-        SleepUtils.sleepSecond(count.intValue());
+//        log.info("出现烦人弹窗，打开新窗口，重新上传");
+//
+//        JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
+//        String jsOpenNewWindow = "window.open('" + url() + "');";
+//        jsExecutor.executeScript(jsOpenNewWindow);
+//
+//        wait.until(ExpectedConditions
+//                        .presenceOfElementLocated(By.xpath("//input[@type=\"file\"]")))
+//                .sendKeys(videoPath);
+//        SleepUtils.sleepSecond(count.intValue());
     }
 
     @Override
@@ -136,7 +135,7 @@ public class DouYinVideoUploader extends AbstractVideoUploader {
     public void submit(WebDriver driver) {
         WebElement button = getWait(driver).until(ExpectedConditions.elementToBeClickable(By
                 .xpath("//button[text()=\"发布\"]")));
-        button.click();
+        BrowserHelper.scrollToClick(button, driver);
         checkClickResult("//button[text()=\"发布\"]", driver);
     }
 
