@@ -76,12 +76,12 @@ public class KuaiShouVideoUploader extends AbstractVideoUploader {
         cover = getWait(driver).until(ExpectedConditions
                 .presenceOfElementLocated(By.xpath("//div[contains(text(), '上传封面')]")));
         cover.click();
-        SleepUtils.sleepSecond(1);
+        SleepUtils.sleepSecond(2);
 
         driver.findElements(By.xpath("//input[@type='file']"))
                 .get(1)
                 .sendKeys(imagePath);
-        SleepUtils.sleepSecond(2);
+        SleepUtils.sleepSecond(5);
         WebElement submitButton = getWait(driver).until(ExpectedConditions
                 .presenceOfElementLocated(By.xpath("//span[contains(text(), '确认')]")));
         submitButton.click();
@@ -98,6 +98,14 @@ public class KuaiShouVideoUploader extends AbstractVideoUploader {
 
     @Override
     public void uploadFile(String videoPath, WebDriver driver) {
+        // 取消未上传的视频
+        try {
+            TimeUnit.SECONDS.sleep(3);
+            WebElement cancel = driver.findElement(By.xpath("//button[text()=\"放弃\"]"));
+            cancel.click();
+        } catch (Exception ex) {
+            log.info("没有<不用了>按钮，不做处理");
+        }
         getWait(driver).until(ExpectedConditions
                         .presenceOfElementLocated(By.xpath("//input[@type=\"file\"]")))
                 .sendKeys(videoPath);
