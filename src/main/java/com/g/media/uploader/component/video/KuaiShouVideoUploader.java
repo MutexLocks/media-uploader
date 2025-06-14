@@ -1,6 +1,7 @@
 package com.g.media.uploader.component.video;
 
 import com.g.media.uploader.model.PlatformEnum;
+import com.g.media.uploader.utils.BrowserHelper;
 import com.g.media.uploader.utils.DownloadHelper;
 import com.g.media.uploader.utils.SleepUtils;
 import com.g.uploader.model.AccountInfo;
@@ -104,7 +105,7 @@ public class KuaiShouVideoUploader extends AbstractVideoUploader {
             WebElement cancel = driver.findElement(By.xpath("//button[text()=\"放弃\"]"));
             cancel.click();
         } catch (Exception ex) {
-            log.info("没有<不用了>按钮，不做处理");
+            log.info("没有<放弃>按钮，不做处理");
         }
         getWait(driver).until(ExpectedConditions
                         .presenceOfElementLocated(By.xpath("//input[@type=\"file\"]")))
@@ -122,7 +123,8 @@ public class KuaiShouVideoUploader extends AbstractVideoUploader {
     public void submit(WebDriver driver) {
         WebElement button = getWait(driver).until(ExpectedConditions
                 .presenceOfElementLocated(By
-                        .xpath("//div[contains(text(), '发布')]")));
-        button.click();
+                        .xpath("//div[text()=\"发布\"]")));
+        BrowserHelper.scrollToClick(button, driver);
+        checkClickResult("//div[text()=\"发布\"]", driver);
     }
 }

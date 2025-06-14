@@ -40,7 +40,7 @@ public class XiaoHongShuVideoUploader extends AbstractVideoUploader {
         AccountInfo accountInfo = new AccountInfo();
         accountInfo.setName(userName);
         accountInfo.setAvatar(imgBase64);
-        
+
         return accountInfo;
     }
 
@@ -69,17 +69,20 @@ public class XiaoHongShuVideoUploader extends AbstractVideoUploader {
                 .elementToBeClickable(By.xpath("//div[contains(text(), '设置封面')]")));
         cover.click();
 
-        cover = getWait(driver).until(ExpectedConditions
-                .elementToBeClickable(By.xpath("/html/body/div[12]/div/div[2]/div/div[1]/div/div/div[2]/div/div[1]/h6")));
-        cover.click();
-
+        try {
+            cover = getWait(driver).until(ExpectedConditions
+                    .elementToBeClickable(By.xpath("/html/body/div[12]/div/div[2]/div/div[1]/div/div/div[2]/div/div[1]/h6")));
+            cover.click();
+        } catch (Exception e) {
+            //ignore
+        }
+//        driver.findElements(By.xpath("//input[@type=\"file\"]")).get(1).sendKeys(imagePath)
         getWait(driver).until(ExpectedConditions
-                        .presenceOfElementLocated(By.xpath("/html/body/div[12]/div/div[2]/div/div[2]/div[2]/input")))
+                        .presenceOfAllElementsLocatedBy(By.xpath("//input[@type=\"file\"]")))
+                .get(1)
                 .sendKeys(imagePath);
-        SleepUtils.sleepSecond(2);
-        WebElement submitButton = getWait(driver).until(ExpectedConditions
-                .elementToBeClickable(By.xpath("/html/body/div[12]/div/div[3]/div/button[2]/div/span")));
-        submitButton.click();
+        SleepUtils.sleepSecond(5);
+        driver.findElements(By.xpath("//button[@type='button']/div/span")).get(5).click();
         SleepUtils.sleepSecond(10);
     }
 
@@ -97,6 +100,9 @@ public class XiaoHongShuVideoUploader extends AbstractVideoUploader {
 
     @Override
     public void setVideoTitle(String title, WebDriver driver) {
+        if (title.length() > 20) {
+            title = title.substring(0, 20);
+        }
         WebElement input = getWait(driver).until(ExpectedConditions.elementToBeClickable(By
                 .xpath("//input[contains(@placeholder, '标题')]")));
         input.sendKeys(title);
@@ -104,10 +110,11 @@ public class XiaoHongShuVideoUploader extends AbstractVideoUploader {
 
     @Override
     public void submit(WebDriver driver) {
-        WebElement button = getWait(driver).until(ExpectedConditions.elementToBeClickable(By
-                .xpath("//*[@id=\"publish-container\"]/div[2]/div[2]/div/button[1]/div/span")));
-        button.click();
-        checkClickResult("//*[@id=\"publish-container\"]/div[2]/div[2]/div/button[1]/div/span", driver);
+        driver.findElements(By.xpath("//button[@type='button']/div/span"))
+                .get(2)
+                .click();
+        checkClickResult(() -> driver.findElements(By.xpath("//button[@type='button']/div/span")).get(2),
+                driver);
     }
 
 //    private Boolean alert() {
