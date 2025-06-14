@@ -7,8 +7,12 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Iterator;
 
 public class ImageCompressor {
@@ -79,6 +83,16 @@ public class ImageCompressor {
 
     // 使用指定质量写入 JPEG 格式图片
     private static void writeJpeg(BufferedImage image, OutputStream outputStream, float quality) throws IOException {
+        // 检测透明度并转换为 RGB 格式（不透明）
+        if (hasTransparency(image)) {
+            image = convertToOpaque(image, Color.WHITE);  // 用白色背景替换透明区域
+        }
+
+        // 确保图像是 RGB 格式（兼容 JPEG）
+        if (image.getType() != BufferedImage.TYPE_INT_RGB) {
+            image = convertToRGB(image);
+        }
+
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpeg");
         if (!writers.hasNext()) {
             throw new IllegalStateException("未找到 JPEG ImageWriter");
@@ -92,7 +106,49 @@ public class ImageCompressor {
         try (ImageOutputStream ios = ImageIO.createImageOutputStream(outputStream)) {
             writer.setOutput(ios);
             writer.write(null, new IIOImage(image, null, null), param);
-            writer.dispose();
+        } finally {
+            writer.dispose();  // 确保资源被释放
         }
+    }
+
+    // 检测图像是否有透明度
+    private static boolean hasTransparency(BufferedImage image) {
+        return image.getTransparency() != Transparency.OPAQUE;
+    }
+
+    // 将透明图像转换为不透明图像（带背景色）
+    private static BufferedImage convertToOpaque(BufferedImage image, Color bgColor) {
+        BufferedImage newImage = new BufferedImage(
+                image.getWidth(),
+                image.getHeight(),
+                BufferedImage.TYPE_INT_RGB
+        );
+
+        Graphics2D g2d = newImage.createGraphics();
+        g2d.setColor(bgColor);
+        g2d.fillRect(0, 0, image.getWidth(), image.getHeight());
+        g2d.drawImage(image, 0, 0, null);
+        g2d.dispose();
+
+        return newImage;
+    }
+
+    // 将图像转换为标准 RGB 格式
+    private static BufferedImage convertToRGB(BufferedImage image) {
+        if (image.getType() == BufferedImage.TYPE_INT_RGB) {
+            return image;
+        }
+
+        BufferedImage newImage = new BufferedImage(
+                image.getWidth(),
+                image.getHeight(),
+                BufferedImage.TYPE_INT_RGB
+        );
+
+        Graphics2D g2d = newImage.createGraphics();
+        g2d.drawImage(image, 0, 0, null);
+        g2d.dispose();
+
+        return newImage;
     }
 }
