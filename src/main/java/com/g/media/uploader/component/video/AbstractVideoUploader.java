@@ -11,6 +11,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.function.Supplier;
 
 @Slf4j
@@ -22,7 +23,7 @@ public abstract class AbstractVideoUploader implements VideoUploader {
     }
 
     public WebDriverWait getWait(WebDriver driver) {
-        return new WebDriverWait(driver, 20);
+        return new WebDriverWait(driver, Duration.ofSeconds(20));
     }
 
     public void checkClickResult(Supplier<WebElement> supplier, WebDriver driver) {

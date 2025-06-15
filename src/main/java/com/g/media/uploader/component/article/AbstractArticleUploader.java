@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
+
 @Slf4j
 public abstract class AbstractArticleUploader implements ArticleUploader {
 
@@ -18,6 +20,6 @@ public abstract class AbstractArticleUploader implements ArticleUploader {
     }
 
     public WebDriverWait getWait(WebDriver driver) {
-        return new WebDriverWait(driver, 20);
+        return new WebDriverWait(driver, Duration.ofSeconds(20));
     }
 }

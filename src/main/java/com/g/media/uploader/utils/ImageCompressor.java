@@ -135,20 +135,26 @@ public class ImageCompressor {
 
     // 将图像转换为标准 RGB 格式
     private static BufferedImage convertToRGB(BufferedImage image) {
+        // 如果已经是 TYPE_INT_RGB 类型，直接返回
         if (image.getType() == BufferedImage.TYPE_INT_RGB) {
             return image;
         }
 
-        BufferedImage newImage = new BufferedImage(
-                image.getWidth(),
-                image.getHeight(),
-                BufferedImage.TYPE_INT_RGB
-        );
+        int width = image.getWidth();
+        int height = image.getHeight();
 
-        Graphics2D g2d = newImage.createGraphics();
-        g2d.drawImage(image, 0, 0, null);
-        g2d.dispose();
+        // 创建 RGB 类型的新图像
+        BufferedImage rgbImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
-        return newImage;
+        // 避免使用可能依赖 X11 的 drawImage，直接手动复制像素
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int argb = image.getRGB(x, y);
+                rgbImage.setRGB(x, y, argb);
+            }
+        }
+
+        return rgbImage;
     }
+
 }
