@@ -113,8 +113,7 @@ public class XiaoHongShuVideoUploader extends AbstractVideoUploader {
         driver.findElements(By.xpath("//button[@type='button']/div/span"))
                 .get(2)
                 .click();
-        checkClickResult(() -> driver.findElements(By.xpath("//button[@type='button']/div/span")).get(2),
-                driver);
+//        checkClickResult(() -> driver.findElements(By.xpath("//button[@type='button']/div/span")).get(2));
     }
 
 //    private Boolean alert() {

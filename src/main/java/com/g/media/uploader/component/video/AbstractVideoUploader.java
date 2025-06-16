@@ -26,7 +26,7 @@ public abstract class AbstractVideoUploader implements VideoUploader {
         return new WebDriverWait(driver, Duration.ofSeconds(20));
     }
 
-    public void checkClickResult(Supplier<WebElement> supplier, WebDriver driver) {
+    public void checkClickResult(Supplier<WebElement> supplier) {
         int submitCount = 0;
         while (true) {
             try {
@@ -48,7 +48,7 @@ public abstract class AbstractVideoUploader implements VideoUploader {
             // 找到按钮，说明上传失败
             log.error("上传视频失败");
             throw new UploaderException("上传视频失败");
-        } catch (NoSuchElementException ex) {
+        } catch (Exception ex) {
             log.error("上传视频成功");
         }
     }

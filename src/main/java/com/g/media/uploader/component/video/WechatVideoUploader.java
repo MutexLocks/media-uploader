@@ -8,13 +8,13 @@ import com.g.media.uploader.utils.SleepUtils;
 import com.g.uploader.model.AccountInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -69,22 +69,28 @@ public class WechatVideoUploader extends AbstractVideoUploader {
 
     @Override
     public void setVideoTitle(String title, WebDriver driver) {
-        Object shadowRoot = getShadowRoot(driver, "wujie-app");
-        WebElement input = (WebElement) ((JavascriptExecutor) driver).executeScript(
-                "return arguments[0].querySelector(\"input[placeholder*='概括']\")",
-                shadowRoot
-        );
         title = title
                 .replaceAll("，", " ")
                 .replaceAll(",", " ");
         //视频号标题至少要6个字
         title = addBlank(title);
-        input.sendKeys(title);
-        try {
-            TimeUnit.SECONDS.sleep(3);
-        } catch (InterruptedException ex) {
-            throw new UploaderException(ex);
+        if (title.length() > 16) {
+            title = title.substring(0, 16);
         }
+        List<WebElement> elements = getShadowRoot(driver)
+                .findElements(By.cssSelector("input[type=\"text\"]"));
+        for (WebElement element : elements) {
+            if (StringUtils.contains(element.getAttribute("placeholder"), "概括")) {
+                element.sendKeys(title);
+                try {
+                    TimeUnit.SECONDS.sleep(3);
+                } catch (InterruptedException ex) {
+                    throw new UploaderException(ex);
+                }
+                return;
+            }
+        }
+        throw new UploaderException("设置标题失败，没有找到element");
     }
 
     private String addBlank(String title) {
@@ -102,14 +108,9 @@ public class WechatVideoUploader extends AbstractVideoUploader {
     @Override
     public void setVideoDescription(String description, WebDriver driver) {
         try {
-            Object shadowRoot = getShadowRoot(driver, "wujie-app");
-            WebElement inputEditor = getWait(driver).until(driver1 ->
-                    (WebElement) ((JavascriptExecutor) driver1).executeScript(
-                            "return arguments[0].querySelector('div.input-editor')",
-                            shadowRoot
-                    )
-            );
-            inputEditor.sendKeys(description);
+            SearchContext shadowRoot = getShadowRoot(driver);
+            shadowRoot.findElement(By.cssSelector("div.input-editor"))
+                    .sendKeys(description);
             TimeUnit.SECONDS.sleep(3);
         } catch (InterruptedException ex) {
             log.error("设置视频描述失败");
@@ -119,31 +120,13 @@ public class WechatVideoUploader extends AbstractVideoUploader {
 
     @Override
     public void uploadFile(String videoPath, WebDriver driver) {
-//        // 1. 找到 tag
-//        WebElement shadowHost = getWait(driver).until(
-//                ExpectedConditions.presenceOfElementLocated(
-//                        By.cssSelector("wujie-app.wujie_iframe[data-wujie-id='content']")
-//                )
-//        );
-//
-//        // 通过JavaScript执行器穿透Shadow DOM
-//        JavascriptExecutor js = (JavascriptExecutor) driver;
-//
 
 
-        // 2. 定位Shadow Host元素（wujie-app）
-        WebElement shadowHost = getWait(driver).until(ExpectedConditions.presenceOfElementLocated(
-                By.cssSelector("wujie-app.wujie_iframe[data-wujie-id='content']")
-        ));
-
-        // 3. 移除覆盖层（如果存在）
-        removeCoverLayer(driver, shadowHost);
-
-        // 4. 执行文件上传
-        uploadVideoFile(driver, shadowHost, videoPath);
-
-        // 3. 发送文件路径
-//        inputFile.sendKeys(videoPath);
+        WebElement inputFile = waitForElementInContext(driver,
+                getShadowRoot(driver),
+                By.cssSelector("input[type='file']"),
+                20);
+        inputFile.sendKeys(videoPath);
 
         // 4. 等待上传完成（自定义逻辑）
         int waitTime = FileUtils.getUploadFileSleepTime(videoPath).intValue();
@@ -152,22 +135,12 @@ public class WechatVideoUploader extends AbstractVideoUploader {
     }
 
 
-
     @Override
     public void setVideoContentTopic(String videoContentTopic, WebDriver driver) {
-        Object shadowRoot = getShadowRoot(driver, "wujie-app");
-
-        WebElement input = getWait(driver).until(driver1 -> {
-            WebElement el = (WebElement) ((JavascriptExecutor) driver1)
-                    .executeScript("return arguments[0].querySelector('.input-editor')", shadowRoot);
-            return (el != null && el.isDisplayed() && el.isEnabled()) ? el : null;
-        });
-        input.sendKeys(videoContentTopic);
-        try {
-            TimeUnit.SECONDS.sleep(3);
-        } catch (InterruptedException ex) {
-            throw new UploaderException(ex);
+        if (StringUtils.isBlank(videoContentTopic)) {
+            return;
         }
+        setVideoDescription(videoContentTopic, driver);
     }
 
     @Override
@@ -177,123 +150,65 @@ public class WechatVideoUploader extends AbstractVideoUploader {
         } catch (InterruptedException ex) {
             throw new UploaderException(ex);
         }
-        Object shadowRoot = getShadowRoot(driver, "wujie-app");
-
-        WebElement button = getWait(driver).until(driver1 -> {
-            WebElement el = (WebElement) ((JavascriptExecutor) driver1)
-                    .executeScript("return arguments[0].querySelector(\"button:textContent('发表')\")", shadowRoot);
-            return (el != null && el.isDisplayed() && el.isEnabled()) ? el : null;
-        });
-        button.click();
-        checkClickResult(() -> getWait(driver).until(driver1 -> {
-            WebElement el = (WebElement) ((JavascriptExecutor) driver1)
-                    .executeScript("return arguments[0].querySelector(\"button:textContent('发表')\")", shadowRoot);
-            return (el != null && el.isDisplayed() && el.isEnabled()) ? el : null;
-        }), driver);
-    }
-
-    private Object execJs(Integer timeOutInSecond,WebDriver driver, String script, Object arg) {
-        if (timeOutInSecond <= 0) {
-            throw new UploaderException("time out can not be zero");
-        }
-        int loopCount = timeOutInSecond;
-        try {
-            while (loopCount > 0) {
-                JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
-                Object ret = jsExecutor.executeScript(script, arg);
-                if (ret != null) {
-                    if (ret instanceof List && ((List) ret).isEmpty()) {
-                        TimeUnit.SECONDS.sleep(1);
-                        loopCount--;
-                        continue;
-                    }
-                    return ret;
-                }
-                TimeUnit.SECONDS.sleep(1);
-                loopCount--;
+        List<WebElement> elements = getShadowRoot(driver)
+                .findElements(By.cssSelector("button[type=\"button\"]"));
+        for (WebElement element : elements) {
+            if (StringUtils.contains( element.getText(), "发表")) {
+                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
             }
-        } catch (Exception ex) {
-            log.error("<UNK>", ex);
         }
-        return null;
+
+
+        checkClickResult(() -> {
+            List<WebElement> thisElements = getShadowRoot(driver)
+                    .findElements(By.cssSelector("button[type=\"button\"]"));
+            for (WebElement element : thisElements) {
+                if (StringUtils.contains( element.getText(), "发表")) {
+                    return element;
+                }
+            }
+            return null;
+        });
     }
 
-    private Object getShadowRoot(WebDriver driver, String tagName) {
-        Object shadowRoot = null;
-        if (StringUtils.isBlank(tagName)) {
-            throw new UploaderException("tag name can not be null");
-        }
-        WebElement tag = getWait(driver).until(
-                ExpectedConditions.presenceOfElementLocated(
-                        By.tagName(tagName)));
-        JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
-        return jsExecutor.executeScript("return arguments[0].shadowRoot", tag);
+
+    private SearchContext getShadowRoot(WebDriver driver) {
+        WebElement shadowHost = getWait(driver).until(ExpectedConditions
+                .presenceOfElementLocated(By.cssSelector("wujie-app")));
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+
+        String script =
+                "Object.defineProperty(" +
+                        "  window.document.querySelector('wujie-app').shadowRoot.firstElementChild," +
+                        "  'parentNode'," +
+                        "  {" +
+                        "    enumerable: true," +
+                        "    configurable: true," +
+                        "    get: () => window.document" +
+                        "  }" +
+                        ");";
+
+        js.executeScript(script);
+        return shadowHost.getShadowRoot();
     }
 
-    private static void removeCoverLayer(WebDriver driver, WebElement shadowHost) {
-        ((JavascriptExecutor) driver).executeScript(
-                "try {" +
-                        "    const shadowRoot = arguments[0].shadowRoot;" +
-                        "    if (shadowRoot) {" +
-                        "        const cover = shadowRoot.querySelector('div[style*=\"position: fixed\"][style*=\"z-index: 2147483647\"]');" +
-                        "        if (cover) {" +
-                        "            cover.remove();" +
-                        "            console.log('覆盖层已移除');" +
-                        "        }" +
-                        "    }" +
-                        "} catch (e) {" +
-                        "    console.warn('移除覆盖层失败', e);" +
-                        "}",
-                shadowHost
-        );
-    }
+    private static WebElement waitForElementInContext(WebDriver driver, SearchContext context, By by, long timeoutSecs) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSecs));
+        return wait.until(new ExpectedCondition<WebElement>() {
+            @Override
+            public WebElement apply(WebDriver d) {
+                try {
+                    return context.findElement(by);
+                } catch (NoSuchElementException | StaleElementReferenceException e) {
+                    return null;
+                }
+            }
 
-    private static void uploadVideoFile(WebDriver driver, WebElement shadowHost, String filePath) {
-        String uploadScript =
-                "try {\n" +
-                        "    const shadowRoot = arguments[0].shadowRoot;\n" +
-                        "    if (!shadowRoot) return { success: false, reason: 'shadowRoot not found' };\n" +
-
-                        "    // 按层级查找文件输入框\n" +
-                        "    let fileInput = shadowRoot.querySelector('.post-edit-wrap .material .upload .post-upload-wrap .upload-wrap .ant-upload input[type=\"file\"]');\n" +
-
-                        "    // 备选选择器\n" +
-                        "    if (!fileInput) {\n" +
-                        "        fileInput = shadowRoot.querySelector('.ant-upload-drag input[type=\"file\"]');\n" +
-                        "    }\n" +
-
-                        "    if (!fileInput) return { success: false, reason: 'file input not found' };\n" +
-
-                        "    // 确保元素可见\n" +
-                        "    fileInput.style.display = 'block';\n" +
-                        "    fileInput.style.opacity = '1';\n" +
-                        "    fileInput.style.position = 'relative';\n" +
-                        "    fileInput.style.zIndex = '2147483646';\n" +
-
-                        "    // 创建模拟文件\n" +
-                        "    const dataTransfer = new DataTransfer();\n" +
-                        "    dataTransfer.items.add(new File([''], arguments[1], { type: 'video/mp4' }));\n" +
-                        "    fileInput.files = dataTransfer.files;\n" +
-
-                        "    // 触发变更事件\n" +
-                        "    const changeEvent = new Event('change', { bubbles: true, cancelable: true });\n" +
-                        "    fileInput.dispatchEvent(changeEvent);\n" +
-
-                        "    // 检查上传状态\n" +
-                        "    const uploadStatus = shadowRoot.querySelector('.ant-upload-list-item');\n" +
-                        "    return { \n" +
-                        "        success: true, \n" +
-                        "        filePath: arguments[1], \n" +
-                        "        uploadElementVisible: window.getComputedStyle(fileInput).display !== 'none',\n" +
-                        "        uploadListVisible: !!uploadStatus\n" +
-                        "    };\n" +
-                        "} catch (e) {\n" +
-                        "    return { success: false, reason: e.message };\n" +
-                        "}\n";
-
-        // 执行上传
-        Object result = ((JavascriptExecutor) driver).executeScript(uploadScript, shadowHost, filePath);
-        System.out.println("上传结果: " + result);
+            @Override
+            public String toString() {
+                return String.format("element located by %s in shadow context", by);
+            }
+        });
     }
 
     public static void main(String[] args) {
