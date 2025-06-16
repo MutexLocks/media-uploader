@@ -11,8 +11,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Base64;
 
-import static com.g.media.uploader.utils.ImageCompressor.compressImage;
-
 @Slf4j
 public class DownloadHelper {
     public static String downloadImageToBase64(String imageUrl) {
@@ -64,7 +62,7 @@ public class DownloadHelper {
                     byte[] imageBytes = outputStream.toByteArray();
 
                     // 压缩图片
-                    imageBytes = compressImage(imageBytes, 5000);
+//                    imageBytes = compressImage(imageBytes, 5000);
 
                     String mimeType = URLConnection.guessContentTypeFromStream(new ByteArrayInputStream(imageBytes));
                     String base64Prefix = "data:" + (mimeType != null ? mimeType : "image/jpeg") + ";base64,";
