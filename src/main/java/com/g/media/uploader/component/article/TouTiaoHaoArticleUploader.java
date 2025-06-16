@@ -8,6 +8,7 @@ import com.g.media.uploader.utils.SleepUtils;
 import com.g.uploader.model.AccountInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -69,6 +70,7 @@ public class TouTiaoHaoArticleUploader extends AbstractArticleUploader {
         WebElement importFileButton = getWait(driver).until(ExpectedConditions
                 .elementToBeClickable(By
                         .xpath("//div[@class=\"syl-toolbar-tool doc-import static\"]")));
+        ((JavascriptExecutor) driver).executeScript("document.elementFromPoint(10, 10).click();");
         SleepUtils.sleepSecond(1);
         importFileButton.click();
         SleepUtils.sleepSecond(1);
