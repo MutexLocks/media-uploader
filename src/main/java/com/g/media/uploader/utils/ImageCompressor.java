@@ -123,7 +123,7 @@ public class ImageCompressor {
                 image.getHeight(),
                 BufferedImage.TYPE_INT_RGB
         );
-
+        System.setProperty("java.awt.headless", "true");
         Graphics2D g2d = newImage.createGraphics();
         g2d.setColor(bgColor);
         g2d.fillRect(0, 0, image.getWidth(), image.getHeight());
