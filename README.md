@@ -6,7 +6,7 @@ Media Uploader 是 [UTMatrix](https://www.utmatrix.top) 的媒体上传组件，
 <br>
 UTMatrix官网地址：[https://www.utmatrix.top](https://www.utmatrix.top)
 <br>
-UTMatrix系统在线DEMO访问地址：[https://utmatrix.vercel.app](https://utmatrix.vercel.app)
+UTMatrix系统在线DEMO访问地址：[https://demo.utmatrix.top](https://demo.utmatrix.top)
 <br>
 [![Version](https://img.shields.io/badge/version-v1.0.0-blue)]()
 [![License](https://img.shields.io/badge/license-MIT-green)]()
@@ -58,6 +58,7 @@ UTMatrix系统在线DEMO访问地址：[https://utmatrix.vercel.app](https://utm
 
 ## 环境要求
 - Java 8
+- selenium 4
 
 ## 新增上传器
 
