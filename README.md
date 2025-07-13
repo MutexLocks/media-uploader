@@ -1,7 +1,5 @@
 # Media Uploader
-<img src="docs/images/logo.png" style="width:50%;"  alt="logo"/>
-
-Media Uploader 是 [UTMatrix](https://www.utmatrix.top) 的媒体上传组件，用于一键上传视频/文章到多个平台，
+<img src="docs/images/logo.png" style="width:6%;"  alt="logo"/>Media Uploader 是 [UTMatrix](https://www.utmatrix.top) 的媒体上传组件，用于一键上传视频/文章到多个平台，
 该组件可配合 [UTMatrix](https://www.utmatrix.top) 系统使用。
 <br>
 UTMatrix官网地址：[https://www.utmatrix.top](https://www.utmatrix.top)

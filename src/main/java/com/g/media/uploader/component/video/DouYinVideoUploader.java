@@ -91,6 +91,13 @@ public class DouYinVideoUploader extends AbstractVideoUploader {
                         .presenceOfElementLocated(By.xpath("//input[@type=\"file\"]")))
                 .sendKeys(imagePath);
         SleepUtils.sleepSecond(2);
+        try {
+            wait.until(ExpectedConditions
+                    .elementToBeClickable(By.xpath("//button[text()=\"保存\"]")))
+                    .click();
+        } catch (Exception ex) {
+            log.warn("<UNK>");
+        }
         WebElement submitButton = wait.until(ExpectedConditions
                 .elementToBeClickable(By.xpath("//span[text()=\"完成\"]")));
         submitButton.click();
@@ -135,7 +142,12 @@ public class DouYinVideoUploader extends AbstractVideoUploader {
     public void submit(WebDriver driver) {
         WebElement button = getWait(driver).until(ExpectedConditions.elementToBeClickable(By
                 .xpath("//button[text()=\"发布\"]")));
-        BrowserHelper.scrollToClick(button, driver);
+        try {
+            button.click();
+            BrowserHelper.scrollToClick(button, driver);
+        } catch (Exception ex) {
+            log.warn("",ex);
+        }
         checkClickResult("//button[text()=\"发布\"]", driver);
     }
 
