@@ -106,6 +106,10 @@ public class DouYinVideoUploader extends AbstractVideoUploader {
 
     @Override
     public void setVideoContentTopic(String videoContentTopic, WebDriver driver) {
+        if (StringUtils.isBlank(videoContentTopic)) {
+            log.warn("没有选择话题");
+            return;
+        }
         WebElement input = getWait(driver).until(ExpectedConditions
                 .elementToBeClickable(By.xpath("//div[text()=\"#添加话题\"]")));
         String[] topics = videoContentTopic.split("#");
