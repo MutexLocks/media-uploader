@@ -49,7 +49,7 @@ public abstract class AbstractVideoUploader implements VideoUploader {
             log.error("上传视频失败");
             throw new UploaderException("上传视频失败");
         } catch (Exception ex) {
-            log.error("上传视频成功");
+            log.info("上传视频成功");
         }
     }
 
@@ -78,7 +78,7 @@ public abstract class AbstractVideoUploader implements VideoUploader {
             log.error("上传视频失败");
             throw new UploaderException("上传视频失败");
         } catch (NoSuchElementException ex) {
-            log.error("上传视频成功");
+            log.info("上传视频成功");
         }
     }
 }
