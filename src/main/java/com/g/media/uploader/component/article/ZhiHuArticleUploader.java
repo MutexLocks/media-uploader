@@ -76,12 +76,12 @@ public class ZhiHuArticleUploader extends AbstractArticleUploader {
         WebDriverWait wait = getWait(driver);
         WebElement importFileButton = wait.until(ExpectedConditions
                 .elementToBeClickable(By
-                        .xpath("//span[text()=\"文档\"]")));
+                        .xpath("//span[text()=\"导入\"]")));
         importFileButton.click();
         SleepUtils.sleepSecond(1);
         importFileButton = wait.until(ExpectedConditions
                 .elementToBeClickable(By
-                        .xpath("//button[text()=\"文档\"]")));
+                        .xpath("//button[@aria-label='导入文档']")));
         importFileButton.click();
         SleepUtils.sleepSecond(10);
     }
