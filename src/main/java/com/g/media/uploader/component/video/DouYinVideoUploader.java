@@ -15,6 +15,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 @Component
 @Slf4j
 public class DouYinVideoUploader extends AbstractVideoUploader {
@@ -67,8 +69,15 @@ public class DouYinVideoUploader extends AbstractVideoUploader {
         wait.until(ExpectedConditions
                         .presenceOfElementLocated(By.xpath("//input[@type=\"file\"]")))
                 .sendKeys(videoPath);
-        Long count = FileUtils.getUploadFileSleepTime(videoPath);
-        SleepUtils.sleepSecond(count.intValue());
+        while (true) {
+            try {
+                TimeUnit.SECONDS.sleep(5);
+                driver.findElement(By.xpath("//div[text()=\"取消上传\"]"));
+            } catch (Exception ex) {
+                log.info("上传文件完成");
+                break;
+            }
+        }
 //        log.info("出现烦人弹窗，打开新窗口，重新上传");
 //
 //        JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
@@ -100,7 +109,7 @@ public class DouYinVideoUploader extends AbstractVideoUploader {
         }
         WebElement submitButton = wait.until(ExpectedConditions
                 .elementToBeClickable(By.xpath("//span[text()=\"完成\"]")));
-        submitButton.click();
+        BrowserHelper.scrollToClick(submitButton, driver);
         SleepUtils.sleepSecond(10);
     }
 
