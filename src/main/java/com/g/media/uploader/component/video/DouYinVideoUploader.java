@@ -69,10 +69,13 @@ public class DouYinVideoUploader extends AbstractVideoUploader {
         wait.until(ExpectedConditions
                         .presenceOfElementLocated(By.xpath("//input[@type=\"file\"]")))
                 .sendKeys(videoPath);
+        wait.until(ExpectedConditions
+                        .presenceOfElementLocated(By.xpath("//div[text()=\"取消上传\"]")));
         while (true) {
             try {
                 TimeUnit.SECONDS.sleep(5);
                 driver.findElement(By.xpath("//div[text()=\"取消上传\"]"));
+                log.info("正在上传...");
             } catch (Exception ex) {
                 log.info("上传文件完成");
                 break;
