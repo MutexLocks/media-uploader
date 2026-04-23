@@ -1,33 +1,31 @@
-HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
+# --- IDEA / Gradle / Maven ---
+# 忽略 IDEA 配置文件
+.idea/
+# 忽略所有模块文件
 *.iml
-*.ipr
+# 忽略 Gradle 构建目录
+.gradle/
+# 忽略 Maven 构建目录
+target/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# --- 本地配置与日志 ---
+# 忽略日志文件
+*.log
+logs/
+
+# --- IDEA 特定忽略 (由 IDEA 自动生成) ---
+# 忽略工作区文件（包含本地窗口布局等）
+workspace.xml
+# 忽略任务文件
+tasks.xml
+# 忽略数据源配置 (数据库连接信息等)
+dataSources/
+dataSources.local.xml
+# 忽略 HTTP 请求记录
+httpRequests/
+# 忽略编辑器缓存
+shelf/
+
+# --- 编译输出 ---
+out/
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
-.vscode/
